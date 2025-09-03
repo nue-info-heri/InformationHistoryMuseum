@@ -97,17 +97,42 @@
 	}).addTo(map);
 	// Loop through the museums and add markers to the map
 	museums.forEach(function(museum) {
-		var marker = L.marker(museum.latlon, {title: museum.name}).addTo(map);
-	// Bind a popup to the marker with the museum name and image
-		function escapeHtml(str) {
-			return str.replace(/&/g, '&amp;')
-				.replace(/'/g, '&#39;')
-				.replace(/"/g, '&quot;')
-				.replace(/</g, '&lt;')
-				.replace(/>/g, '&gt;');
-		}
-		marker.bindPopup("<div id='info-header'><div id='info-title'>" + museum.name + "<br>" + museum.name2 + "<br>" + museum.name3 + "</div></div><div id='info-content'><img src="../img/" + museum.img + " width='300' /><div style='max-height: 165px; overflow-y: auto;'>" + museum.dsp + "</div></div><br><div id='info-footer'><a target='_blank' rel='noopener noreferrer' href='../index.html'>Web Page</a></div><div id='info-footer'><a target='_blank' rel='noopener noreferrer' href='../index.html'>展示例</a></div>",{maxWidth:'300'});
-	});
+  var marker = L.marker(museum.latlon, { title: museum.name }).addTo(map);
+
+  function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;')
+      .replace(/'/g, '&#39;')
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  const popupHtml = `
+    <div id="info-header">
+      <div id="info-title">
+        ${escapeHtml(museum.name)}<br>
+        ${escapeHtml(museum.name2)}<br>
+        ${escapeHtml(museum.name3)}
+      </div>
+    </div>
+    <div id="info-content">
+      <img src="../img/${museum.img}" width="300" alt="${escapeHtml(museum.name)}">
+      <div style="max-height:165px; overflow-y:auto;">
+        ${escapeHtml(museum.dsp)}
+      </div>
+    </div>
+    <br>
+    <div id="info-footer">
+      <a target="_blank" rel="noopener noreferrer" href="${museum.link}">Web Page</a>
+    </div>
+    <div id="info-footer">
+      <a target="_blank" rel="noopener noreferrer" href="${museum.link2}">展示例</a>
+    </div>
+  `;
+
+  marker.bindPopup(popupHtml, { maxWidth: 300 });
+});
+
 
 // Map Scale
 	L.control.scale({
